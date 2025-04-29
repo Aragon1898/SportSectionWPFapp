@@ -1,0 +1,80 @@
+@startuml
+
+class User {
+  +id: Integer
+  +name: String
+  +email: String
+  +password: String
+}
+
+class Admin {
+  +registerMember(): void
+  +assignCoach(): void
+  +generateReport(): void
+}
+
+class Coach {
+  +createSchedule(): void
+  +markAttendance(): void
+  +addAchievement(): void
+}
+
+class Member {
+  +section: Section
+  +viewSchedule(): Schedule
+  +viewAchievements(): List<Achievement>
+}
+
+class Section {
+  +name: String
+  +coach: Coach
+  +members: List<Member>
+  +addMember(): void
+  +removeMember(): void
+}
+
+class Schedule {
+  +date: Date
+  +time: Time
+  +trainingType: String
+  +publishSchedule(): void
+}
+
+class Attendance {
+  +date: Date
+  +isPresent: Boolean
+  +updateStatistics(): void
+}
+
+class Achievement {
+  +competitionName: String
+  +points: Integer
+  +awards: String
+}
+
+class Report {
+  +period: DateRange
+  +parameters: Map
+  +generateReport(): void
+  +exportToPDF(): void
+}
+
+' Наследование
+User <|-- Admin
+User <|-- Coach
+User <|-- Member
+
+' Ассоциации
+Admin --> Member : manages
+Admin --> Coach : manages
+Coach --> Section : trains
+Section "1" *-- "many" Member : contains
+Coach --> Schedule : creates
+Schedule --> Section : belongs to
+Attendance --> Member : tracks
+Attendance --> Schedule : references
+Achievement --> Member : has
+Report --> Attendance : uses
+Report --> Achievement : uses
+
+@enduml
